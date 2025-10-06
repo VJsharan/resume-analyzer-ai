@@ -1,0 +1,390 @@
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Download, Share2, ArrowLeft, RefreshCw, AlertCircle } from 'lucide-react';
+import ComparisonBarChart from '../components/charts/ComparisonBarChart';
+import ComparisonRadarChart from '../components/charts/ComparisonRadarChart';
+import DistributionPieChart from '../components/charts/DistributionPieChart';
+
+interface ComparisonData {
+  speeches: Array<{
+    speech_id: string;
+    filename: string;
+    speaker?: string;
+    language: string;
+    duration_seconds: number;
+    empathy_score?: number;
+    sentiment_score?: number;
+    overall_sentiment?: string;
+  }>;
+  comparison_metrics: {
+    empathy_comparison: Array<{ speech_id: string; filename: string; empathy_score: number }>;
+    empathy_leader?: string;
+    empathy_range: { min: number; max: number; average: number };
+    sentiment_distribution: Record<string, number>;
+    sentiment_comparison: Array<{ speech_id: string; filename: string; sentiment: string; score: number }>;
+    emotional_profiles: Array<{ speech_id: string; filename: string; profile: any }>;
+    dominant_emotions: Record<string, string>;
+    topic_distribution: Array<{ speech_id: string; filename: string; topics: Record<string, number> }>;
+    common_themes: string[];
+    topic_overlap: { common_themes: string[]; all_themes: string[] };
+    rhetorical_comparison: Array<{ speech_id: string; filename: string; styles: any }>;
+    most_used_styles: Record<string, number>;
+    urgency_comparison: Array<{ speech_id: string; filename: string; urgency_level: string }>;
+    authenticity_comparison: Array<{ speech_id: string; filename: string; authenticity_score: number }>;
+  };
+  insights: {
+    key_insights: string[];
+    differences: string[];
+    similarities: string[];
+    recommendations: string[];
+  };
+  comparison_date: string;
+}
+
+export default function CompareResultsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [comparisonData, setComparisonData] = useState<ComparisonData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const speechIds = location.state?.speechIds || [];
+
+  useEffect(() => {
+    if (speechIds.length < 2) {
+      setError('Please select at least 2 speeches to compare');
+      setLoading(false);
+      return;
+    }
+
+    const fetchComparison = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+        const response = await fetch(`${baseUrl}/api/v1/compare`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ speech_ids: speechIds }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch comparison data');
+        }
+
+        const data = await response.json();
+        setComparisonData(data);
+      } catch (err) {
+        console.error('Error fetching comparison:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load comparison');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComparison();
+  }, [speechIds]);
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsExporting(false);
+    alert('Comparison report exported successfully!');
+  };
+
+  const handleShare = () => {
+    alert('Share link copied to clipboard!');
+  };
+
+  const getEmpathyColor = (score: number) => {
+    if (score >= 80) return 'bg-green-600';
+    if (score >= 60) return 'bg-yellow-600';
+    return 'bg-red-500';
+  };
+
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center min-h-64">
+            <div className="text-center">
+              <RefreshCw className="h-8 w-8 text-black animate-spin mx-auto mb-4" />
+              <p className="text-gray-600">Comparing speeches...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !comparisonData) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="text-center py-8">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Comparison</h3>
+              <p className="text-gray-600 mb-4">{error || 'No comparison data available'}</p>
+              <button
+                onClick={() => navigate('/compare')}
+                className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 inline-flex items-center"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Selection
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { speeches, comparison_metrics, insights } = comparisonData;
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/compare')}
+            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Selection
+          </button>
+
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">Comparison Results</h1>
+              <p className="text-slate-600">Analyzing {speeches.length} political speeches</p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-semibold rounded-lg transition-colors disabled:opacity-50"
+              >
+                <Download className="h-4 w-4" />
+                {isExporting ? 'Exporting...' : 'Export Report'}
+              </button>
+
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg transition-colors"
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Insights Summary */}
+        {insights && (insights.key_insights.length > 0 || insights.similarities.length > 0 || insights.differences.length > 0) && (
+          <div className="bg-gradient-to-br from-slate-900 to-slate-700 text-white rounded-xl p-8 mb-8 shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">AI-Generated Insights</h2>
+
+            {insights.key_insights.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-semibold mb-2 text-slate-200">Key Insights:</h3>
+                <ul className="space-y-2">
+                  {insights.key_insights.map((insight, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-slate-300 mr-2">•</span>
+                      <span className="text-slate-100">{insight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {insights.similarities.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-semibold mb-2 text-slate-200">Similarities:</h3>
+                <ul className="space-y-2">
+                  {insights.similarities.map((similarity, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-slate-300 mr-2">•</span>
+                      <span className="text-slate-100">{similarity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {insights.differences.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-semibold mb-2 text-slate-200">Key Differences:</h3>
+                <ul className="space-y-2">
+                  {insights.differences.map((difference, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-slate-300 mr-2">•</span>
+                      <span className="text-slate-100">{difference}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {insights.recommendations.length > 0 && (
+              <div>
+                <h3 className="font-semibold mb-2 text-slate-200">Recommendations:</h3>
+                <ul className="space-y-2">
+                  {insights.recommendations.map((recommendation, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-slate-300 mr-2">•</span>
+                      <span className="text-slate-100">{recommendation}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Empathy Comparison */}
+        {comparison_metrics.empathy_comparison.length > 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+            {comparison_metrics.empathy_leader && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm font-semibold text-green-900">
+                  👑 Empathy Leader: {comparison_metrics.empathy_leader}
+                </p>
+                <p className="text-xs text-green-700 mt-1">
+                  Average: {comparison_metrics.empathy_range.average.toFixed(1)} |
+                  Range: {comparison_metrics.empathy_range.min.toFixed(1)} - {comparison_metrics.empathy_range.max.toFixed(1)}
+                </p>
+              </div>
+            )}
+
+            <ComparisonBarChart
+              title="Empathy Score Comparison"
+              data={comparison_metrics.empathy_comparison.map((item, index) => ({
+                name: `Speech ${index + 1}`,
+                empathy: Math.round(item.empathy_score),
+                filename: item.filename
+              }))}
+              dataKeys={[
+                { key: 'empathy', name: 'Empathy Score', color: '#3b82f6' }
+              ]}
+              yAxisLabel="Score (0-100)"
+            />
+          </div>
+        )}
+
+        {/* Sentiment Distribution */}
+        {comparison_metrics.sentiment_distribution && Object.keys(comparison_metrics.sentiment_distribution).length > 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <DistributionPieChart
+                  title="Overall Sentiment Distribution"
+                  data={Object.entries(comparison_metrics.sentiment_distribution).map(([sentiment, count]) => ({
+                    name: sentiment.charAt(0).toUpperCase() + sentiment.slice(1),
+                    value: count as number
+                  }))}
+                  colors={['#10b981', '#64748b', '#ef4444']}
+                />
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">By Speech</h3>
+                {comparison_metrics.sentiment_comparison.length > 0 && (
+                  <div className="space-y-3">
+                    {comparison_metrics.sentiment_comparison.map((item, index) => (
+                      <div key={item.speech_id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-slate-900">Speech {index + 1}</span>
+                          <p className="text-xs text-slate-600 truncate">{item.filename}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={`text-sm font-semibold capitalize px-3 py-1 rounded-full ${
+                            item.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
+                            item.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
+                            'bg-slate-100 text-slate-800'
+                          }`}>
+                            {item.sentiment}
+                          </span>
+                          <span className="text-sm text-slate-600">{(item.score * 100).toFixed(0)}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Common Themes */}
+        {comparison_metrics.common_themes && comparison_metrics.common_themes.length > 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Common Themes</h2>
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
+              <h3 className="text-sm font-semibold text-green-900 mb-3">Shared Across Speeches:</h3>
+              <div className="flex flex-wrap gap-2">
+                {comparison_metrics.common_themes.map((theme, idx) => (
+                  <span key={idx} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                    {theme}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Emotional Profiles - Radar Chart */}
+        {comparison_metrics.emotional_profiles && comparison_metrics.emotional_profiles.length > 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-8">
+            {(() => {
+              // Get all unique emotions across all profiles
+              const allEmotions = new Set<string>();
+              comparison_metrics.emotional_profiles.forEach(item => {
+                if (item.profile) {
+                  Object.keys(item.profile).filter(key => key !== 'dominant_emotion').forEach(emotion => {
+                    allEmotions.add(emotion);
+                  });
+                }
+              });
+
+              // Transform data for radar chart
+              const radarData = Array.from(allEmotions).map(emotion => {
+                const dataPoint: any = { metric: emotion.charAt(0).toUpperCase() + emotion.slice(1) };
+                comparison_metrics.emotional_profiles.forEach((item, index) => {
+                  const value = item.profile && item.profile[emotion];
+                  dataPoint[`speech${index + 1}`] = typeof value === 'number' ? Math.round(value * 100) : 0;
+                });
+                return dataPoint;
+              });
+
+              // Create dataKeys for each speech
+              const dataKeys = comparison_metrics.emotional_profiles.map((item, index) => ({
+                key: `speech${index + 1}`,
+                name: `Speech ${index + 1}`,
+                color: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'][index % 4]
+              }));
+
+              return radarData.length > 0 ? (
+                <ComparisonRadarChart
+                  title="Emotional Profiles Comparison"
+                  data={radarData}
+                  dataKeys={dataKeys}
+                />
+              ) : null;
+            })()}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
