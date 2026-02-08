@@ -1,0 +1,35 @@
+{
+  "js": "javascript",
+  "ts": "typescript",
+  "py": "python",
+  "rb": "ruby",
+  "cpp": "c++",
+
+  "dsa": "data structures",
+  "algo": "algorithms",
+  "oops": "oop",
+
+  "db": "database",
+  "apis": "api",
+
+  "ux": "ui ux",
+  "ui": "ui ux",
+
+  "ci/cd": "ci cd",
+  "cicd": "ci cd",
+
+  "os": "linux",
+
+  "aws cloud": "aws",
+  "gcp": "google cloud",
+
+  "viz": "data visualization",
+
+  "pentest": "penetration testing",
+  "vapt": "vulnerability assessment",
+
+  "soc": "siem",
+
+  "comm skills": "communication",
+  "soft skills": "communication"
+}
