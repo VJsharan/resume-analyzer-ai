@@ -1,0 +1,252 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-02-08",
+    "description": "Job roles and required skills for skill gap analysis"
+  },
+  "roles": [
+    {
+      "role_id": "junior_software_dev",
+      "role_name": "Junior Software Developer",
+      "category": "Software Engineering",
+      "level": "Fresher",
+      "core_skills": [
+        "Python",
+        "Java",
+        "Data Structures",
+        "Algorithms",
+        "Object Oriented Programming",
+        "Git"
+      ],
+      "optional_skills": [
+        "SQL",
+        "REST APIs",
+        "Docker"
+      ]
+    },
+    {
+      "role_id": "frontend_dev",
+      "role_name": "Frontend Developer (Junior)",
+      "category": "Web Development",
+      "level": "Fresher",
+      "core_skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React",
+        "Responsive Design"
+      ],
+      "optional_skills": [
+        "TypeScript",
+        "Next.js",
+        "Tailwind CSS"
+      ]
+    },
+    {
+      "role_id": "backend_dev",
+      "role_name": "Backend Developer (Junior)",
+      "category": "Web Development",
+      "level": "Fresher",
+      "core_skills": [
+        "Python",
+        "Java",
+        "Node.js",
+        "SQL",
+        "REST APIs"
+      ],
+      "optional_skills": [
+        "Docker",
+        "Authentication",
+        "Microservices"
+      ]
+    },
+    {
+      "role_id": "qa_engineer",
+      "role_name": "QA / Test Engineer",
+      "category": "Quality Assurance",
+      "level": "Fresher",
+      "core_skills": [
+        "Manual Testing",
+        "Test Cases",
+        "Bug Tracking",
+        "Selenium",
+        "Git"
+      ],
+      "optional_skills": [
+        "Automation Testing",
+        "CI/CD",
+        "API Testing"
+      ]
+    },
+    {
+      "role_id": "data_analyst",
+      "role_name": "Data Analyst (Junior)",
+      "category": "Data",
+      "level": "Fresher",
+      "core_skills": [
+        "Python",
+        "SQL",
+        "Excel",
+        "Data Visualization",
+        "Statistics"
+      ],
+      "optional_skills": [
+        "Power BI",
+        "Tableau",
+        "Pandas"
+      ]
+    },
+    {
+      "role_id": "it_support",
+      "role_name": "IT Support / Helpdesk Technician",
+      "category": "IT Operations",
+      "level": "Fresher",
+      "core_skills": [
+        "Operating System",
+        "Networking Basics",
+        "Troubleshooting",
+        "Hardware",
+        "Customer Support"
+      ],
+      "optional_skills": [
+        "Active Directory",
+        "Ticketing Systems"
+      ]
+    },
+    {
+      "role_id": "soc_analyst",
+      "role_name": "Cybersecurity Analyst (Tier 1)",
+      "category": "Cybersecurity",
+      "level": "Fresher",
+      "core_skills": [
+        "Networking",
+        "Linux",
+        "SIEM",
+        "Incident Response",
+        "Security Fundamentals"
+      ],
+      "optional_skills": [
+        "Threat Hunting",
+        "Python",
+        "Malware Analysis"
+      ]
+    },
+    {
+      "role_id": "devops_junior",
+      "role_name": "DevOps Engineer (Junior)",
+      "category": "DevOps",
+      "level": "Fresher",
+      "core_skills": [
+        "Linux",
+        "Git",
+        "CI/CD",
+        "Docker",
+        "Cloud Basics"
+      ],
+      "optional_skills": [
+        "Kubernetes",
+        "Terraform",
+        "Monitoring"
+      ]
+    },
+    {
+      "role_id": "cloud_support",
+      "role_name": "Cloud Support Associate",
+      "category": "Cloud",
+      "level": "Fresher",
+      "core_skills": [
+        "Cloud Computing",
+        "Linux",
+        "Networking",
+        "AWS",
+        "Troubleshooting"
+      ],
+      "optional_skills": [
+        "Azure",
+        "GCP",
+        "Scripting"
+      ]
+    },
+    {
+      "role_id": "bi_analyst",
+      "role_name": "Business Intelligence (BI) Analyst",
+      "category": "Data",
+      "level": "Fresher",
+      "core_skills": [
+        "SQL",
+        "Excel",
+        "Data Warehousing",
+        "Reporting",
+        "Data Visualization"
+      ],
+      "optional_skills": [
+        "Power BI",
+        "Tableau",
+        "Python"
+      ]
+    },
+    {
+      "role_id": "web_dev",
+      "role_name": "Web Developer (Junior)",
+      "category": "Web Development",
+      "level": "Fresher",
+      "core_skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "React",
+        "Node.js",
+        "Git"
+      ],
+      "optional_skills": [
+        "TypeScript",
+        "MongoDB",
+        "REST APIs",
+        "Authentication",
+        "Deployment"
+      ]
+    },
+    {
+      "role_id": "app_dev",
+      "role_name": "App Developer (Junior)",
+      "category": "Mobile Development",
+      "level": "Fresher",
+      "core_skills": [
+        "Java",
+        "Kotlin",
+        "Swift",
+        "Flutter",
+        "Android",
+        "iOS"
+      ],
+      "optional_skills": [
+        "Firebase",
+        "REST APIs",
+        "UI/UX",
+        "State Management",
+        "Push Notifications"
+      ]
+    },
+    {
+      "role_id": "genai_engineer",
+      "role_name": "Generative AI Engineer (Junior)",
+      "category": "Artificial Intelligence",
+      "level": "Fresher",
+      "core_skills": [
+        "Python",
+        "Machine Learning",
+        "Deep Learning",
+        "Transformers",
+        "Prompt Engineering"
+      ],
+      "optional_skills": [
+        "PyTorch",
+        "TensorFlow",
+        "LangChain",
+        "Vector Databases",
+        "API Integration"
+      ]
+    }
+  ]
+}
+
