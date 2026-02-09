@@ -1,4 +1,4 @@
-# AI-Implmented Resume Analyzer & Career Coach 🚀
+# AI based Resume Analyzer & Career Coach 🚀
 
 A modern, full-stack AI application that helps students and job seekers optimize their resumes for their dream careers. It analyzes resumes against specific job roles, provides ATS scores, identifies skill gaps, and offers actionable, data-driven feedback.
 
