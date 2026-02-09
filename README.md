@@ -45,42 +45,42 @@ A modern, full-stack AI application that helps students and job seekers optimize
 
 ```
 resume-analyzer-ai/
-├── frontend-college/        # React Frontend
+├── frontend-college/
 │   ├── src/
-│   │   ├── components/      # UI Components
+│   │   ├── components/
 │   │   │   ├── LoadingScreen.jsx
 │   │   │   ├── ResultsDashboard.jsx
 │   │   │   └── UploadSection.jsx
-│   │   ├── assets/          # Images & GIFs
+│   │   ├── assets/
 │   │   │   ├── resume-scan.gif
 │   │   │   └── resume-scan-2.gif
-│   │   ├── App.jsx          # Main Application Logic
-│   │   ├── index.css        # Tailwind & Custom Styles
-│   │   └── main.jsx         # Entry Point
-│   ├── public/              # Static Assets (grid.svg)
-│   ├── index.html           # HTML Template
-│   ├── tailwind.config.js   # Tailwind Configuration
-│   ├── postcss.config.js    # PostCSS Configuration
-│   └── package.json         # Frontend Dependencies
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── public/
+│   ├── index.html
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   └── package.json
 │
-├── parser/                  # Python Backend
-│   ├── main.py              # FastAPI Application & Endpoints
-│   ├── resume_parser/       # Core Logic Modules
-│   │   ├── pipeline.py      # Orchestrator
-│   │   ├── scoring.py       # Scoring Algorithms
-│   │   ├── matcher.py       # Gap Analysis
-│   │   ├── pdf_extractor.py # PDF Text Extraction
-│   │   └── skill_extractor.py # Skill Entity Extraction
-│   ├── data/                # Data Resources
-│   │   ├── job_skills.json  # Job Roles Database
+├── parser/
+│   ├── main.py
+│   ├── resume_parser/
+│   │   ├── pipeline.py
+│   │   ├── scoring.py
+│   │   ├── matcher.py
+│   │   ├── pdf_extractor.py
+│   │   └── skill_extractor.py
+│   ├── data/
+│   │   ├── job_skills.json
 │   │   ├── job_alias.json
 │   │   └── skills.json
-│   ├── uploads/             # Temp Upload Directory
-│   ├── requirements.txt     # Backend Dependencies
-│   └── temptest.py          # Testing Script
+│   ├── uploads/
+│   ├── requirements.txt
+│   └── temptest.py
 │
-├── .gitignore               # Git Ignore Rules
-└── README.md                # Documentation
+├── .gitignore
+└── README.md
 ```
 
 ---
