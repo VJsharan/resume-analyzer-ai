@@ -1,56 +1,124 @@
-# AI-Driven Resume-Based Skill Gap Analysis and Career Coach
+# AI-Implmented Resume Analyzer & Career Coach 🚀
 
-## Project Overview
-
-This project aims to develop an intelligent, explainable AI system that bridges the gap between academic learning and industry demands. By analyzing resumes and benchmarking them against current market trends, the system identifies skill gaps and generates personalized learning roadmaps with targeted course recommendations.
-
-## Problem Statement
-
-Final-year computer science students and recent graduates often struggle with:
-
-- **Skill-Job Market Mismatch**: Lack of awareness regarding specific technical skills employers seek.
-- **Information Overload**: Difficulty finding effective courses among valid online resources.
-- **Lack of Personalization**: Generic advice that ignores individual backgrounds.
-- **No Actionable Insights**: Existing tools usually list missing skills without offering a structured path to acquire them.
-
-## Proposed Solution
-
-Our system helps students and job seekers by providing:
-
-1.  **Automated Resume Analysis**: Extracting skills using NLP techniques.
-2.  **Market-Aware Gap Scoring**: Prioritizing skill gaps based on real-time job market demand.
-3.  **Explainable Recommendations**: Offering transparent reasoning for every suggestion.
-4.  **Personalized Roadmaps**: Creating tailored week-by-week learning plans.
-
-## System Architecture
-
-The solution follows a multi-layered architecture:
-
-1.  **User Interface**: For resume upload and dashboard interaction.
-2.  **Resume Processing**: Using NLP (PyMuPDF, spaCy) to parse user documents.
-3.  **Skill Analysis**: Leveraging TF-IDF and taxonomy mapping to identify gaps.
-4.  **Recommendation Engine**: Generating course suggestions.
-5.  **Learning Roadmap**: structuring the learning path.
-
-## Implementation Phases
-
-- **Phase 1: Resume Parsing**: Setup frontend/backend and implement resume parsing.
-- **Phase 2: Skill Analysis & Recommendations**: Build skill comparison models, market weighting, and the course database.
-- **Phase 3: Roadmap & Deployment**: Testing, optimization, and system deployment.
-
-## Future Scope
-
-- **LLM Integration**: Incorporating GPT-4 or Gemini for conversational guidance.
-- **Real-Time Scraping**: Aggregating job postings from LinkedIn/Indeed.
-- **Salary Prediction**: Estimating potential salary improvements based on skill acquisition.
-- **Mobile Application**: Developing iOS and Android apps for better accessibility.
-
-## key Technologies
-
-- **NLP**: Transformer-based models, spaCy, TF-IDF.
-- **Backend**: Python.
-- **Frontend**: React (implied by "User Interface" and general stack).
+A modern, full-stack AI application that helps students and job seekers optimize their resumes for their dream careers. It analyzes resumes against specific job roles, provides ATS scores, identifies skill gaps, and offers actionable, data-driven feedback.
 
 ---
 
-_"The best way to predict your future is to create it through strategic skill development guided by data-driven insights."_
+## 🚀 Features
+
+- **🔍 AI-Powered Analysis**: Instantly analyzes resumes against target job roles to identify matched and missing skills.
+- **📊 Smart Scoring System**:
+  - **Overall Score**: Weighted average based on industry standards.
+  - **Tone & Style**: Evaluates action verbs and quantifiable achievements.
+  - **Content Quality**: Checks for diverse skills and project depth.
+  - **Structure Check**: Validates sections and optimal length.
+- **🤖 ATS Compatibility Check**: Simulates Applicant Tracking Systems to ensure your resume is parseable.
+- **💡 Actionable Insights**: Provides specific, prioritized tips to improve your resume immediately.
+- **⚡ Modern UI/UX**:
+  - **Glassmorphism Design**: Premium, clean interface with smooth animations.
+  - **Interactive Result Dashboard**: Visual breakdown of all scores.
+  - **Drag & Drop Upload**: Seamless file handling.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS (with custom glassmorphism utilities)
+- **Icons**: Lucide React
+- **Animations**: Framer Motion
+- **Typography**: Google Sans + Open Sans
+- **HTTP Client**: Axios
+
+### Backend
+
+- **Framework**: FastAPI (Python)
+- **NLP Processing**: fitz (PyMuPDF) for text extraction
+- **Data Analysis**: scikit-learn (TF-IDF & Cosine Similarity)
+- **Pattern Matching**: RegEx for structural analysis
+
+---
+
+## 📦 Project Structure
+
+```
+resume-analyzer-ai/
+├── frontend-college/        # React Frontend
+│   ├── src/
+│   │   ├── components/      # UI Components (Upload, Results, Loading)
+│   │   ├── App.jsx          # Main Application Logic
+│   │   └── index.css        # Tailwind & Custom Styles
+│   ├── public/              # Static Assets
+│   └── package.json         # Frontend Dependencies
+│
+├── parser/                  # Python Backend
+│   ├── main.py              # FastAPI Application & Endpoints
+│   ├── resume_parser/       # Core Logic Modules
+│   │   ├── pipeline.py      # Orchestrator
+│   │   ├── scoring.py       # Scoring Algorithms (New!)
+│   │   ├── matcher.py       # Gap Analysis
+│   │   └── pdf_extractor.py # PDF Text Extraction
+│   ├── data/                # Job Roles & Skills Database
+│   └── requirements.txt     # Backend Dependencies
+└── README.md                # Documentation
+```
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- Python 3.9+
+
+### 1. Backend Setup
+
+```bash
+cd parser
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+_Server will start at http://127.0.0.1:8000_
+
+### 2. Frontend Setup
+
+```bash
+cd frontend-college
+npm install
+npm run dev
+```
+
+_App will open at http://localhost:5173_
+
+---
+
+## 📝 Usage Guide
+
+1. **Select Role**: Choose your target job title (e.g., "Full Stack Developer").
+2. **Upload**: Drag and drop your PDF resume.
+3. **Analyze**: Click "Analyze Resume" to let the AI process your document.
+4. **Review**:
+   - Check your **ATS Score** to ensure parsability.
+   - Review **Missing Skills** to see what you need to add.
+   - Follow **Action Plan** tips to improve your content and tone.
+
+---
+
+## 🎯 Future Roadmap
+
+- [ ] **LLM Integration**: Use Gemini/GPT-4 for rewriting suggestions.
+- [ ] **Real-Time Jobs**: Fetch live job descriptions from LinkedIn.
+- [ ] **Resume Builder**: AI-assisted resume creation tool.
+- [ ] **Auth System**: User accounts to save history.
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome! Please fork the repository and create a pull request for any feature enhancements.
+
+---
