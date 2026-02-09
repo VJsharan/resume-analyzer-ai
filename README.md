@@ -47,21 +47,39 @@ A modern, full-stack AI application that helps students and job seekers optimize
 resume-analyzer-ai/
 ├── frontend-college/        # React Frontend
 │   ├── src/
-│   │   ├── components/      # UI Components (Upload, Results, Loading)
+│   │   ├── components/      # UI Components
+│   │   │   ├── LoadingScreen.jsx
+│   │   │   ├── ResultsDashboard.jsx
+│   │   │   └── UploadSection.jsx
+│   │   ├── assets/          # Images & GIFs
+│   │   │   ├── resume-scan.gif
+│   │   │   └── resume-scan-2.gif
 │   │   ├── App.jsx          # Main Application Logic
-│   │   └── index.css        # Tailwind & Custom Styles
-│   ├── public/              # Static Assets
+│   │   ├── index.css        # Tailwind & Custom Styles
+│   │   └── main.jsx         # Entry Point
+│   ├── public/              # Static Assets (grid.svg)
+│   ├── index.html           # HTML Template
+│   ├── tailwind.config.js   # Tailwind Configuration
+│   ├── postcss.config.js    # PostCSS Configuration
 │   └── package.json         # Frontend Dependencies
 │
 ├── parser/                  # Python Backend
 │   ├── main.py              # FastAPI Application & Endpoints
 │   ├── resume_parser/       # Core Logic Modules
 │   │   ├── pipeline.py      # Orchestrator
-│   │   ├── scoring.py       # Scoring Algorithms (New!)
+│   │   ├── scoring.py       # Scoring Algorithms
 │   │   ├── matcher.py       # Gap Analysis
-│   │   └── pdf_extractor.py # PDF Text Extraction
-│   ├── data/                # Job Roles & Skills Database
-│   └── requirements.txt     # Backend Dependencies
+│   │   ├── pdf_extractor.py # PDF Text Extraction
+│   │   └── skill_extractor.py # Skill Entity Extraction
+│   ├── data/                # Data Resources
+│   │   ├── job_skills.json  # Job Roles Database
+│   │   ├── job_alias.json
+│   │   └── skills.json
+│   ├── uploads/             # Temp Upload Directory
+│   ├── requirements.txt     # Backend Dependencies
+│   └── temptest.py          # Testing Script
+│
+├── .gitignore               # Git Ignore Rules
 └── README.md                # Documentation
 ```
 
