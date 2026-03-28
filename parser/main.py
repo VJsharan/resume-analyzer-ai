@@ -1,10 +1,16 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import shutil
 import os
 import json
 from typing import List
+from pydantic import BaseModel
+from google import genai
+from google.genai import types
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from resume_parser.pipeline import run_resume_pipeline
 from resume_parser.matcher import calculate_gap, calculate_similarity
@@ -159,8 +165,61 @@ async def analyze_resume(
             "match_percentage": gap_analysis["match_percentage"]
         },
         "improvement_tips": improvement_tips,
-        "extracted_skills": extracted_skills
+        "extracted_skills": extracted_skills,
+        "raw_text": raw_text
     }
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    resume_text: str
+    job_role: str
+    history: List[ChatMessage] = []
+
+@app.post("/chat")
+async def chat_with_resume(request: ChatRequest, fastapi_req: Request):
+    auth_header = fastapi_req.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid Authorization header. Please provide your Gemini API key.")
+    
+    api_key = auth_header.split("Bearer ")[1].strip()
+    if not api_key:
+        raise HTTPException(status_code=401, detail="Gemini API key is required.")
+        
+    try:
+        client = genai.Client(api_key=api_key)
+        
+        system_context = f"You are an expert career coach and ATS optimization specialist. The user uploaded their resume for a '{request.job_role}' role. Here is their resume text:\n\n{request.resume_text}\n\nUse this context to accurately assess their strengths, identify missing elements, and answer their related questions. Be concise and actionable."
+        
+        formatted_history = [
+            types.Content(role="user", parts=[types.Part.from_text(text=system_context)]),
+            types.Content(role="model", parts=[types.Part.from_text(text="Understood. I am ready to review the resume and answer any questions to provide actionable career coaching.")])
+        ]
+        
+        for msg in request.history:
+            role = "user" if msg.role == "user" else "model"
+            formatted_history.append(types.Content(role=role, parts=[types.Part.from_text(text=msg.content)]))
+            
+        chat = client.chats.create(model='gemini-2.5-flash', history=formatted_history)
+        response = chat.send_message(request.message)
+        
+        return {"response": response.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Gemini Chat error: {str(e)}")
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await websocket.send_text(f"Message received: {data}")
+    except WebSocketDisconnect:
+        print("Client disconnected")
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

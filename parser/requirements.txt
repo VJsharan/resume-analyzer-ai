@@ -1,8 +1,11 @@
 fastapi
-uvicorn
+uvicorn[standard]
+gunicorn
 python-multipart
 scikit-learn
 pymupdf
 spacy
 numpy
 requests
+google-genai
+python-dotenv

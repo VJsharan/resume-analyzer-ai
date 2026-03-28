@@ -1,0 +1,166 @@
+
+You said:
+give me instructions on how to use https://platform.llemental.com
+
+ChatGPT said:
+Here’s a clear step-by-step guide on how to use the LLeMental platform (https://platform.llemental.com) to turn your Word/PPT templates into AI-powered automated documents: 
+
+🚀 1. Sign Up & Log In
+Go to https://platform.llemental.com/ and create an account (email/password or SSO if offered).
+
+Log in — you’ll land on your Dashboard where your templates and projects live. 
+
+📄 2. Prepare Your Template
+LLeMental works by filling variables inside your documents: 
+
+Open a Word (.docx) or PowerPoint (.pptx) file that you want to automate.
+
+Insert variables where dynamic content should go (i.e., parts you want AI to generate). Use double curly braces, e.g.:
+
+{{ client_name }}
+{{ summary_paragraph }}
+Save this file — this becomes your template. 
+
+👉 Tip: Keep variable names short and descriptive (e.g., {{ project_summary }}). 
+
+📤 3. Upload Your Template
+On your Dashboard, click Create Template.
+
+Choose your file (the Word/PPT you just prepared).
+
+Name your template and add an optional description.
+
+Click Submit. 
+
+The platform will scan your file and automatically detect all variables ({{ … }}) you've added. 
+
+✍️ 4. Define AI Prompts for Variables
+After upload, you’ll see a list of all detected variables. For each: 
+
+Choose whether the variable should be AI-generated or manual.
+
+Write an AI prompt — this tells the AI how to fill that section.
+
+Example:
+
+Variable: {{ executive_summary }}
+
+Prompt: “Generate a 4–6 sentence business executive summary focused on project goals, key results, and next steps.” 
+
+👉 Clear prompts = better AI output. 
+
+📤 5. Generate Documents
+When you’re ready to use a saved template:
+
+Go back to your Dashboard.
+
+Choose the template you want to use and click Generate.
+
+On the Generate screen:
+
+Upload background files (e.g., PDFs, docs, meeting notes, etc.).
+
+These files provide content the AI will use to fill template variables.
+
+Click Generate and wait for the system to process. 
+
+Once ready, you can download the completed document (.docx or .pptx). 
+
+📥 6. Review & Edit Output
+After generation:
+
+Download the finished document.
+
+Review the content in Word/PowerPoint.
+
+You can edit any part manually after download if needed. 
+
+🎯 Tips for Best Results
+✔ Give specific prompts (include format, tone, focus). 
+
+✔ Use multiple context files for richer output (PDFs, notes). 
+
+✔ Save templates once — then you can reuse them repeatedly. 
+
+🛠️ Supported File Types
+Word (.docx) ✔
+
+PowerPoint (.pptx) ✔
+
+PDF (for input/context) ✔
+(Excel support may be coming soon according to docs) 
+
+If you want, I can walk you through creating your first example template step by step! Just tell me what document you want to automate.
+
+
+You said:
+Uploaded image
+Uploaded image
+no my file looks like this and its asking for stuffs like in the 2nd image 
+
+ChatGPT said:
+Got it — this is the Shape Prompt editor inside LLeMental.
+
+Your slide (first image) has static text:
+
+“Clearly define the problem”
+
+“Who faces this problem?”
+
+“Why is it important or relevant?”
+
+The second image is asking you to tell the AI what content to generate inside that shape.
+
+So instead of putting variables like {{problem}}, here you directly describe what you want AI to write.
+
+✅ What You Should Enter in That Prompt Box
+You need to describe:
+
+What the slide is about
+
+What kind of content you want
+
+The tone
+
+The format
+
+Here’s a strong example you can paste and adjust:
+
+📌 Example Prompt (for a startup pitch deck)
+Write slide content that clearly defines the core problem our startup is solving.
+
+Structure it in three short sections:
+1. Clearly define the problem in 2–3 concise sentences.
+2. Identify who specifically faces this problem (target customer or industry).
+3. Explain why this problem is important, including impact, costs, or risks.
+
+Keep it concise, investor-ready, and persuasive.
+Use bullet points where appropriate.
+🎯 If This Is for a Specific Business
+If you already know your business idea, make it more specific. Example:
+
+Write slide content defining the problem faced by small businesses that struggle with manual document generation.
+
+Include:
+- A clear description of the inefficiency
+- Who is affected (roles, company size)
+- Why it matters (time loss, errors, cost)
+
+Keep it sharp and suitable for a VC pitch deck.
+🧠 How This Works in LLeMental
+Each shape = one AI instruction
+
+The AI will generate text directly into that slide area
+
+The better your instruction, the better your slide
+
+Think of it like:
+👉 “What would I tell ChatGPT to write in this box?”
+
+If you tell me:
+
+What your startup / project is about
+
+Who the audience is (investors? customers? class presentation?)
+
+I’ll write a perfectly optimized prompt you can paste directly into that box.

@@ -1,8 +1,58 @@
-import React from 'react';
-import { CheckCircle2, AlertCircle, TrendingUp, Award, Share2 } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { CheckCircle2, AlertCircle, TrendingUp, Award, Share2, Download, Copy, ExternalLink, X, Loader2 } from 'lucide-react';
+import RoadmapSection from './RoadmapSection';
+import ChatIntegration from './ChatIntegration';
+import html2canvas from 'html2canvas';
 
-export default function ResultsDashboard({ data }) {
+export default function ResultsDashboard({ data, fileInfo, onReset, apiKey }) {
   const { overall_score, scores, ats_score, skills_analysis, improvement_tips } = data;
+  
+  const [screenshotDataUrl, setScreenshotDataUrl] = useState(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const reportRef = useRef(null);
+
+  const handleShare = async () => {
+    if (!reportRef.current) return;
+    setIsCapturing(true);
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#f8fafc',
+      });
+      setScreenshotDataUrl(canvas.toDataURL('image/png'));
+    } catch (err) {
+      console.error("Failed to capture screenshot", err);
+    } finally {
+      setIsCapturing(false);
+    }
+  };
+
+  const downloadScreenshot = () => {
+    const link = document.createElement('a');
+    link.download = `resume-audit-${data.job_role.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+    link.href = screenshotDataUrl;
+    link.click();
+  };
+
+  const copyScreenshot = async () => {
+    try {
+      const response = await fetch(screenshotDataUrl);
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ]);
+      alert("Image copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy", err);
+      alert("Failed to copy image. Your browser might not support this feature.");
+    }
+  };
+
+  const openInNewTab = () => {
+    const w = window.open("");
+    w.document.write(`<img src="${screenshotDataUrl}" style="max-width: 100%; height: auto;" />`);
+  };
 
   const getScoreColor = (score) => {
     if (score >= 80) return 'text-green-600';
@@ -31,7 +81,7 @@ export default function ResultsDashboard({ data }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 selection:bg-indigo-100 selection:text-indigo-900 font-['Google_Sans']">
+    <div ref={reportRef} className="min-h-screen bg-slate-50 py-12 px-4 selection:bg-indigo-100 selection:text-indigo-900 font-['Google_Sans'] relative">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
@@ -40,10 +90,18 @@ export default function ResultsDashboard({ data }) {
             <h1 className="text-4xl font-bold text-slate-900 mb-2">Resume Audit</h1>
             <p className="text-slate-500 font-medium">Target Role: <span className="text-indigo-600">{data.job_role}</span></p>
           </div>
-          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-medium transition-colors">
-            <Share2 className="w-4 h-4" /> Share Report
+          <button 
+            onClick={handleShare}
+            disabled={isCapturing}
+            data-html2canvas-ignore="true"
+            className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 flex items-center gap-2 text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {isCapturing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />} 
+            {isCapturing ? 'Generating...' : 'Share Report'}
           </button>
         </div>
+
+        <RoadmapSection jobRole={data.job_role} />
 
         <div className="grid lg:grid-cols-12 gap-8">
           
@@ -100,6 +158,29 @@ export default function ResultsDashboard({ data }) {
               })}
             </div>
 
+            {/* Additional Metrics (Horizontal bars) */}
+            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+              <div className="space-y-4">
+                {[
+                  { label: 'Recruiter scan', score: 72 },
+                  { label: 'Project depth', score: 78 },
+                  { label: 'Impact metrics', score: 38 },
+                  { label: 'Summary/headline', score: 0 },
+                ].map((metric, idx) => (
+                  <div key={idx} className="flex items-center gap-4">
+                    <div className="w-36 text-sm font-medium text-slate-700">{metric.label}</div>
+                    <div className="flex-1 h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
+                      <div 
+                        className={`h-full rounded-full ${metric.score > 50 ? 'bg-blue-600' : 'bg-red-500'}`}
+                        style={{ width: `${metric.score}%` }}
+                      ></div>
+                    </div>
+                    <div className="w-12 text-right font-bold text-slate-900 text-sm">{metric.score}/100</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Improvement Tips */}
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
               <h3 className="font-bold text-xl text-slate-900 mb-6 flex items-center gap-2">
@@ -150,40 +231,82 @@ export default function ResultsDashboard({ data }) {
                </div>
             </div>
 
-            {/* Validated Skills */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-               <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                 <CheckCircle2 className="w-5 h-5 text-green-500" />
-                 Matched Skills
-               </h3>
-               <div className="flex flex-wrap gap-2">
-                 {skills_analysis.matched_skills.map((skill, i) => (
-                   <span key={i} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold border border-slate-200">
-                     {skill}
-                   </span>
-                 ))}
-                 {skills_analysis.matched_skills.length === 0 && <span className="text-slate-400 text-sm italic">No direct matches found.</span>}
-               </div>
-            </div>
+            {/* Skills Groups based on Image 2 */}
+            <div className="space-y-4">
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 className="font-bold text-slate-900 mb-4">Missing Keywords / To Learn</h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {skills_analysis.missing_skills.map((skill, i) => {
+                    const isRedTheme = i % 2 === 0;
+                    return (
+                      <span key={i} className={`px-3 py-1.5 rounded-md text-[13px] font-semibold ${isRedTheme ? 'bg-[#fceae9] text-[#9b3a38]' : 'bg-[#f4ebe1] text-[#7a6449]'}`}>
+                        {skill}
+                      </span>
+                    );
+                  })}
+                  {skills_analysis.missing_skills.length === 0 && <span className="text-slate-400 text-sm">Perfect match!</span>}
+                </div>
+              </div>
 
-            {/* Missing Skills */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-               <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                 <AlertCircle className="w-5 h-5 text-amber-500" />
-                 Missing Keywords
-               </h3>
-               <div className="flex flex-wrap gap-2">
-                 {skills_analysis.missing_skills.map((skill, i) => (
-                   <span key={i} className="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-sm font-semibold border border-red-100 opacity-90">
-                     {skill}
-                   </span>
-                 ))}
-               </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                <h3 className="font-bold text-slate-900 mb-4">Already strong</h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {skills_analysis.matched_skills.map((skill, i) => (
+                    <span key={i} className="px-3 py-1.5 rounded-md text-[13px] font-semibold bg-[#e1edf9] text-[#2c5f94]">
+                      {skill}
+                    </span>
+                  ))}
+                  {skills_analysis.matched_skills.length === 0 && <span className="text-slate-400 text-sm italic">No direct matches.</span>}
+                </div>
+              </div>
             </div>
 
           </div>
         </div>
+        
+        {/* Analyze Another Button */}
+        <div className="flex justify-center mt-12 mb-8 relative z-10">
+          <button
+            onClick={onReset}
+            className="px-8 py-3.5 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
+          >
+            Analyze Another Resume
+          </button>
+        </div>
+        
       </div>
+
+      {/* Modal Overlay */}
+      {screenshotDataUrl && (
+        <div data-html2canvas-ignore="true" className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-all duration-300">
+          <div className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <h2 className="text-xl font-bold text-slate-900">Share Report</h2>
+              <button onClick={() => setScreenshotDataUrl(null)} className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded-full transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto bg-slate-100 flex-1 flex justify-center items-start">
+              <img src={screenshotDataUrl} alt="Report Screenshot" className="max-w-full h-auto rounded-xl shadow-sm border border-slate-200" />
+            </div>
+            
+            <div className="p-6 bg-white border-t border-slate-100 flex flex-wrap gap-4 justify-end">
+              <button onClick={openInNewTab} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl flex items-center gap-2 transition-colors">
+                <ExternalLink className="w-4 h-4" /> Open
+              </button>
+              <button onClick={copyScreenshot} className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl flex items-center gap-2 transition-colors">
+                <Copy className="w-4 h-4" /> Copy
+              </button>
+              <button onClick={downloadScreenshot} className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl flex items-center gap-2 transition-colors shadow-sm">
+                <Download className="w-4 h-4" /> Download
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ChatIntegration data={data} fileInfo={fileInfo} apiKey={apiKey} />
     </div>
   );
 }

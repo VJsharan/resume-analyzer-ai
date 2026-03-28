@@ -6,7 +6,9 @@ export default function UploadSection({ onAnalyze }) {
   const [file, setFile] = useState(null);
   const [jobRoles, setJobRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState('');
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
   const [isDragOver, setIsDragOver] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     // Simulated roles since we might not have a running backend yet for this specific endpoint
@@ -25,8 +27,13 @@ export default function UploadSection({ onAnalyze }) {
   };
 
   const handleAnalyze = () => {
+    setErrorMsg('');
+    if (!apiKey.trim()) {
+      setErrorMsg('Gemini API key is required');
+      return;
+    }
     if (file && selectedRole) {
-      onAnalyze(file, selectedRole);
+      onAnalyze(file, selectedRole, apiKey.trim());
     }
   };
 
@@ -87,6 +94,25 @@ export default function UploadSection({ onAnalyze }) {
 
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Enter your Gemini API Key
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        placeholder="Paste your Gemini API key here..."
+                        value={apiKey}
+                        onChange={(e) => {
+                          setApiKey(e.target.value);
+                          localStorage.setItem('gemini_api_key', e.target.value);
+                          if(e.target.value && errorMsg === 'Gemini API key is required') setErrorMsg('');
+                        }}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
                       Upload Resume (PDF)
                     </label>
                     <div
@@ -127,9 +153,11 @@ export default function UploadSection({ onAnalyze }) {
                     </div>
                   </div>
 
+                  {errorMsg && (
+                    <p className="text-red-500 text-sm font-semibold text-center">{errorMsg}</p>
+                  )}
                   <button
                     onClick={handleAnalyze}
-                    disabled={!file || !selectedRole}
                     className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-[0.98] ${
                       !file || !selectedRole
                         ? 'bg-slate-300 cursor-not-allowed shadow-none'

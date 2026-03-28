@@ -8,11 +8,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 function App() {
   const [currentStep, setCurrentStep] = useState('upload'); // 'upload' | 'analyzing' | 'results'
   const [analysisData, setAnalysisData] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [apiKey, setApiKey] = useState('');
   const [error, setError] = useState('');
 
-  const handleAnalyze = async (file, role) => {
+  const handleAnalyze = async (file, role, key) => {
     setCurrentStep('analyzing');
     setError('');
+    setUploadedFile({ name: file.name, type: file.type || 'PDF' });
+    setApiKey(key);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -27,7 +31,6 @@ function App() {
         },
       });
 
-      // Ensure loading screen shows for at least 2.5s for better UX
       const elapsedTime = Date.now() - startTime;
       const minLoadTime = 2500;
       
@@ -46,6 +49,8 @@ function App() {
 
   const handleReset = () => {
     setAnalysisData(null);
+    setUploadedFile(null);
+    setApiKey('');
     setCurrentStep('upload');
   };
 
@@ -80,15 +85,7 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <div className="fixed bottom-8 right-8 z-50">
-              <button
-                onClick={handleReset}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-full font-bold hover:bg-indigo-700 shadow-xl transition-transform hover:-translate-y-1 flex items-center gap-2"
-              >
-                Analyze Another
-              </button>
-            </div>
-            <ResultsDashboard data={analysisData} />
+            <ResultsDashboard data={analysisData} fileInfo={uploadedFile} onReset={handleReset} apiKey={apiKey} />
           </motion.div>
         )}
       </AnimatePresence>
