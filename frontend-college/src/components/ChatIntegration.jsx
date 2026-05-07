@@ -77,7 +77,7 @@ export default function ChatIntegration({ data, fileInfo, apiKey }) {
         history: history
       };
 
-      const response = await axios.post('http://127.0.0.1:8000/chat', payload, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/chat`, payload, {
         headers: {
           'Authorization': `Bearer ${apiKey}`
         }

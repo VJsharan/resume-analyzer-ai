@@ -53,12 +53,12 @@ export default function UploadSection({ onAnalyze }) {
       <div className="bg-white pb-20 pt-10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-             <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 font-medium text-sm mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full text-indigo-700 font-medium text-sm mb-6">
               <Brain className="w-4 h-4" />
-              AI-Powered Resume Analyzer and Career Coach 
+              Resume Based Analyzer and Career Coach
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-              Optimize your resume for <br/>
+              Optimize your resume for <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-blue-700">
                 your dream career
               </span>
@@ -104,7 +104,7 @@ export default function UploadSection({ onAnalyze }) {
                         onChange={(e) => {
                           setApiKey(e.target.value);
                           localStorage.setItem('gemini_api_key', e.target.value);
-                          if(e.target.value && errorMsg === 'Gemini API key is required') setErrorMsg('');
+                          if (e.target.value && errorMsg === 'Gemini API key is required') setErrorMsg('');
                         }}
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium transition-colors"
                       />
@@ -119,11 +119,10 @@ export default function UploadSection({ onAnalyze }) {
                       onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
                       onDragLeave={() => setIsDragOver(false)}
                       onDrop={handleDrop}
-                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
-                        isDragOver 
-                          ? 'border-indigo-500 bg-indigo-50' 
-                          : 'border-slate-200 bg-slate-50 hover:border-indigo-300'
-                      }`}
+                      className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${isDragOver
+                        ? 'border-indigo-500 bg-indigo-50'
+                        : 'border-slate-200 bg-slate-50 hover:border-indigo-300'
+                        }`}
                     >
                       <input
                         type="file"
@@ -158,11 +157,10 @@ export default function UploadSection({ onAnalyze }) {
                   )}
                   <button
                     onClick={handleAnalyze}
-                    className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-[0.98] ${
-                      !file || !selectedRole
-                        ? 'bg-slate-300 cursor-not-allowed shadow-none'
-                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
-                    }`}
+                    className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all transform active:scale-[0.98] ${!file || !selectedRole
+                      ? 'bg-slate-300 cursor-not-allowed shadow-none'
+                      : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
+                      }`}
                   >
                     Analyze Resume
                   </button>
@@ -201,7 +199,7 @@ export default function UploadSection({ onAnalyze }) {
                     </div>
                   </li>
                 </ul>
-                
+
                 <div className="mt-8 pt-6 border-t border-slate-200">
                   <p className="text-xs text-slate-500 text-center">
                     Trusted by students placed at top companies
@@ -216,17 +214,17 @@ export default function UploadSection({ onAnalyze }) {
       {/* Features Grid */}
       <div className="max-w-6xl mx-auto px-4 py-20">
         <div className="grid md:grid-cols-3 gap-8">
-          <FeatureCard 
+          <FeatureCard
             icon={Shield}
             title="Privacy First"
             description="Your resume is processed securely and deleted immediately after analysis. We value your data privacy."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={Clock}
             title="Instant Results"
             description="Get comprehensive feedback in seconds. No waiting days for a manual review."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={Award}
             title="Actionable Insights"
             description="Don't just get a score. Get specific, actionable tips to improve your resume immediately."

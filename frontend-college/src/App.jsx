@@ -25,7 +25,7 @@ function App() {
     try {
       const startTime = Date.now();
       
-      const response = await axios.post('http://127.0.0.1:8000/analyze', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/analyze`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
